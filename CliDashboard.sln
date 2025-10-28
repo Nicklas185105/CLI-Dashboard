@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CliDashboard", "CliDashboard\CliDashboard.csproj", "{4FAA81EA-E1B6-40F4-B564-885B40763132}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CliDashboard.Shared", "CliDashboard.Shared\CliDashboard.Shared.csproj", "{81C9BAFF-FDDC-462D-8831-81E8A4353B38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliDashboard.UI.CLI", "CliDashboard.UI.CLI\CliDashboard.UI.CLI.csproj", "{F2B37893-21D6-4ABB-BD43-CEB39FA6BBBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CliDashboard.UI.CLI", "CliDashboard.UI.CLI\CliDashboard.UI.CLI.csproj", "{F2B37893-21D6-4ABB-BD43-CEB39FA6BBBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliDashboard.Core", "CliDashboard.Core\CliDashboard.Core.csproj", "{5B1CC01A-3B8C-472F-8A96-F2C0D419F819}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CliDashboard.Core", "CliDashboard.Core\CliDashboard.Core.csproj", "{5B1CC01A-3B8C-472F-8A96-F2C0D419F819}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4FAA81EA-E1B6-40F4-B564-885B40763132}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FAA81EA-E1B6-40F4-B564-885B40763132}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FAA81EA-E1B6-40F4-B564-885B40763132}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FAA81EA-E1B6-40F4-B564-885B40763132}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81C9BAFF-FDDC-462D-8831-81E8A4353B38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81C9BAFF-FDDC-462D-8831-81E8A4353B38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81C9BAFF-FDDC-462D-8831-81E8A4353B38}.Release|Any CPU.ActiveCfg = Release|Any CPU

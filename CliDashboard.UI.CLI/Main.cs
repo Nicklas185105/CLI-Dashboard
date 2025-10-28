@@ -6,13 +6,12 @@ internal class Main(ScriptManager scriptsManager,
 {
     public void Run()
     {
-        string scriptRoot = Setup.GetScriptRoot();
-        string configPath = Path.Combine(scriptRoot, "scripts.yaml");
-        string launcherPath = Path.Combine(scriptRoot, "launch-cli-dashboard.ps1");
-        string pluginRoot = Path.Combine(scriptRoot, "plugins");
-        Setup.EnsureDirectoryExists(scriptRoot);
+        string root = PathUtil.GetRoot();
+        string configPath = Path.Combine(root, "scripts.yaml");
+        string pluginRoot = Path.Combine(root, "plugins");
+        Setup.EnsureDirectoryExists(root);
         Setup.EnsureFileExists(configPath);
-        Setup.CreateLauncherScript(launcherPath);
+        Setup.CreateLauncherScript(root);
         PluginHubManager pluginHubManager = new(pluginRoot);
 
         while (true)

@@ -7,16 +7,62 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>true</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+		<!-- Optional, be conservative with trimming for plugin scenarios -->
+		<PublishTrimmed>false</PublishTrimmed>
+
+		<!-- Toggle this to enable/disable auto deploy on rebuild -->
+		<RunDeployOnRebuild>true</RunDeployOnRebuild>
+
+		<PowerShellExe>pwsh</PowerShellExe>
+		<PowerShellArgs>-ExecutionPolicy Bypass -NoProfile -File</PowerShellArgs>
+
+		<!-- Resolve repo root = one folder up from this .csproj -->
+		<RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..'))</RepoRoot>
+
+		<!-- Script paths in the repo root -->
+		<PublishScript>$(RepoRoot)\publish.ps1</PublishScript>
+		<InstallScript>$(RepoRoot)\install.ps1</InstallScript>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CliDashboard.Shared\CliDashboard.Shared.csproj" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.8" />
     <PackageReference Include="Spectre.Console" Version="0.50.0" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.50.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CliDashboard.Core\CliDashboard.Core.csproj" />
-    <ProjectReference Include="..\CliDashboard.Shared\CliDashboard.Shared.csproj" />
   </ItemGroup>
 
+	<Target Name="PostPublish_CopyShared" AfterTargets="Publish">
+		<!-- Pick the built Shared.dll and copy it next to the EXE -->
+		<ItemGroup>
+			<SharedOutput Include="..\CliDashboard.Shared\bin\$(Configuration)\$(TargetFramework)\CliDashboard.Shared.dll" />
+		</ItemGroup>
+		<Copy SourceFiles="@(SharedOutput)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+	</Target>
+
+	<!-- Kick both scripts after a successful Rebuild -->
+	<Target Name="Rebuild_RunRootScripts"
+			AfterTargets="Rebuild"
+			Condition=" '$(RunDeployOnRebuild)' == 'true' AND '$(Configuration)' == 'Release' ">
+		<!-- Run publish.ps1 in the repo root; pass a few useful args -->
+		<Exec
+		  WorkingDirectory="$(RepoRoot)"
+		  Command="$(PowerShellExe) $(PowerShellArgs) &quot;$(PublishScript)&quot; -Configuration &quot;$(Configuration)&quot; -Rid &quot;$(RuntimeIdentifier)&quot;"
+		  IgnoreExitCode="false" />
+
+		<!-- Then run install.ps1 (expected to copy from whatever publish.ps1 produced into %APPDATA%) -->
+		<Exec
+		  WorkingDirectory="$(RepoRoot)"
+		  Command="$(PowerShellExe) $(PowerShellArgs) &quot;$(InstallScript)&quot;"
+		  IgnoreExitCode="false" />
+	</Target>
 </Project>

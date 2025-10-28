@@ -6,6 +6,7 @@ public static class Setup
     {
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
         Directory.CreateDirectory(Path.Combine(path, "scripts"));
+        Directory.CreateDirectory(Path.Combine(path, "configs"));
     }
 
     public static void EnsureFileExists(string filePath)
@@ -16,17 +17,8 @@ public static class Setup
 
     public static void CreateLauncherScript(string path)
     {
-        if (!File.Exists(path))
-        {
-            var projectPath = Directory.GetCurrentDirectory();
-            //var content = $"Start-Process powershell -ArgumentList \"-NoExit\", \"-Command\", \"dotnet run --project '{projectPath}'\"";
-            File.WriteAllText(path, projectPath);
-        }
-    }
-
-    public static string GetScriptRoot()
-    {
-        var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        return Path.Combine(appData, "cli-dashboard");
+        var launchPath = Path.Combine(path, "launch-cli-dashboard.ps1");
+        if (!File.Exists(launchPath))
+            File.WriteAllText(launchPath, $"{path}\\CliDashboard.UI.CLI.exe");
     }
 }

@@ -1,7 +1,7 @@
 ﻿using CliDashboard.UI.CLI;
 
 var services = new ServiceCollection();
-var scriptRoot = Setup.GetScriptRoot();
+var scriptRoot = PathUtil.GetRoot();
 var pluginRoot = Path.Combine(scriptRoot, "plugins");
 var configPath = Path.Combine(scriptRoot, "scripts.yaml");
 
