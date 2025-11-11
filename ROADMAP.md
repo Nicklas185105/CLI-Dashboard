@@ -16,42 +16,47 @@
 
 ---
 
-## 🛠️ Phase 2: Developer Experience Boost
+## ✅ Phase 2: Developer Experience Boost (Complete)
 
-* [ ] Support plugin metadata descriptions in main UI
-* [ ] Color-coded or styled plugin categories in menus
-* [ ] Plugin reload without restarting dashboard
-* [ ] Fuzzy search for scripts/plugins from main menu
-* [ ] Git-style command alias system (e.g., `cli-dashboard add script`)
-* [ ] Add "Favorite Scripts/Plugins" feature with quick access
-
----
-
-## 📁 Phase 3: Plugin System Enhancement
-
-* [ ] Plugin versioning support
-* [ ] Optional "Plugin Dependencies" (shared libs, etc.)
-* [ ] Plugin-defined keyboard shortcuts (optional)
-* [ ] Plugin output logs (per plugin)
-* [ ] Plugin pinning to top of menu
-* [ ] Plugin category browsing / tags
+* [x] Support plugin metadata descriptions in main UI
+* [x] Color-coded or styled plugin categories in menus
+* [x] Plugin reload without restarting dashboard
+* [x] Fuzzy search for scripts/plugins from main menu
+* [x] Git-style command alias system (e.g., `cli-dashboard add script`)
+* [x] Add "Favorite Scripts/Plugins" feature with quick access
 
 ---
 
-## 🌍 Phase 4: Ecosystem & Sync
+## ✅ Phase 3: Plugin System Enhancement (Complete)
 
-* [ ] GitHub-based plugin registry/marketplace (manual import or URL based)
-* [ ] Plugin sharing: export/import ZIP
-* [ ] Configurable plugin sync folder (e.g., Dropbox/Git repo)
-* [ ] Global settings file (e.g., `dashboard.yaml`) to persist state
+* [x] Plugin versioning support
+* [x] Optional "Plugin Dependencies" (shared libs, etc.)
+* [x] Plugin-defined keyboard shortcuts (optional)
+* [x] Plugin output logs (per plugin)
+* [x] Plugin pinning to top of menu
+* [x] Plugin category browsing / tags
+* [x] Support plugin configs placed in "%appdata%/configs/<pluginname>"/"%appdata%/plugins/<pluginname>/<configfile>"
+
+*Note: DLL/NuGet plugin support moved to future phases*
+---
+
+## ✅ Phase 4: Ecosystem & Sync (Complete)
+
+* [x] Plugin sharing: export/import ZIP
+* [x] Configurable plugin sync folder (e.g., Dropbox/Git repo)
+* [x] Global settings file (e.g., `dashboard.yaml`) to persist state
+* [x] Full UI integration for all features
+
+*Note: GitHub marketplace moved to new Phase 7*
 
 ---
 
-## 🤖 Phase 5: Automation & Scheduling
+## ✅ Phase 5: Automation & Scheduling (Complete)
 
-* [ ] Cron-like system to schedule plugin/script execution
-* [ ] Background worker support for plugin monitoring (e.g., alert plugin)
-* [ ] Desktop notifications via PowerShell or toast
+* [x] Cron-like system to schedule plugin/script execution
+* [x] Background worker support for plugin monitoring (e.g., alert plugin)
+* [x] Desktop notifications via PowerShell or toast
+* [x] Plugin/script background execution - Should be able to shut them down from the plugin monitoring
 
 ---
 

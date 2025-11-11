@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Menus\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Plugins\" />
-    <Folder Include="Scripts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
