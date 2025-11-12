@@ -216,7 +216,7 @@ Contributions are welcome! Please:
 
 ## License
 
-[Specify your license here]
+MIT License - see [LICENSE](LICENSE) file for details
 
 ## Support
 
