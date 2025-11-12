@@ -1,10 +1,15 @@
 name: Hello World
+author: CLI Dashboard Team
+menu: Examples
+scriptPath: main.csx
 description: A simple example plugin that demonstrates basic plugin structure
 version: 1.0.0
-author: CLI Dashboard Team
-category: Examples
+dependencies: []
+keyboardShortcut: 
 tags:
   - example
   - tutorial
   - beginner
-icon: 🌍
+isPinned: false
+configPath: 
+    

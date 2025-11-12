@@ -1,10 +1,15 @@
 name: System Info
+author: CLI Dashboard Team
+menu: Examples
+scriptPath: main.csx
 description: Displays system information including OS, CPU, memory, and disk space
 version: 1.0.0
-author: CLI Dashboard Team
-category: Examples
+dependencies: []
+keyboardShortcut: 
 tags:
   - system
   - monitoring
   - info
-icon: 💻
+isPinned: false
+configPath: 
+    

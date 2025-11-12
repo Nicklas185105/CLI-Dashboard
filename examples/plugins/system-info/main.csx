@@ -1,11 +1,16 @@
 #!/usr/bin/env dotnet-script
 #r "nuget: Spectre.Console, 0.50.0"
+#r "nuget: Serilog, 4.3.0"
+#r "../../CliDashboard.Shared.dll"
 
 using Spectre.Console;
 using System;
 using System.Diagnostics;
 using System.IO;
+using CliDashboard.Shared.Utils;
 using System.Runtime.InteropServices;
+
+ConsoleUtils.Clear();
 
 AnsiConsole.Write(
     new FigletText("System Info")
@@ -74,8 +79,8 @@ var diskTable = new Table();
 diskTable.Border(TableBorder.Rounded);
 diskTable.AddColumn(new TableColumn("[bold]Drive[/]").Centered());
 diskTable.AddColumn(new TableColumn("[bold]Type[/]").Centered());
-diskTable.AddColumn(new TableColumn("[bold]Total Size[/]").RightJustified());
-diskTable.AddColumn(new TableColumn("[bold]Free Space[/]").RightJustified());
+diskTable.AddColumn(new TableColumn("[bold]Total Size[/]").RightAligned());
+diskTable.AddColumn(new TableColumn("[bold]Free Space[/]").RightAligned());
 diskTable.AddColumn(new TableColumn("[bold]Usage[/]").Centered());
 
 foreach (var drive in DriveInfo.GetDrives())
@@ -85,16 +90,16 @@ foreach (var drive in DriveInfo.GetDrives())
         var totalGB = drive.TotalSize / 1024.0 / 1024.0 / 1024.0;
         var freeGB = drive.AvailableFreeSpace / 1024.0 / 1024.0 / 1024.0;
         var usedPercent = (1 - (freeGB / totalGB)) * 100;
-        
-        var barColor = usedPercent > 90 ? Color.Red : 
-                       usedPercent > 75 ? Color.Yellow : 
+
+        var barColor = usedPercent > 90 ? Color.Red :
+                       usedPercent > 75 ? Color.Yellow :
                        Color.Green;
-        
+
         var usageBar = new BreakdownChart()
             .Width(20)
             .AddItem("Used", usedPercent, barColor)
             .AddItem("Free", 100 - usedPercent, Color.Grey);
-        
+
         diskTable.AddRow(
             $"[purple]{drive.Name}[/]",
             drive.DriveType.ToString(),
@@ -109,7 +114,3 @@ AnsiConsole.Write(
     new Panel(diskTable)
         .Header("[purple]Disk Drives[/]")
         .BorderColor(Color.Purple));
-
-AnsiConsole.WriteLine();
-AnsiConsole.MarkupLine("[dim]Press any key to continue...[/]");
-Console.ReadKey(true);

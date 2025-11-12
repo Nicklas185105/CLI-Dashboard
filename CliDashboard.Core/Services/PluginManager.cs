@@ -102,29 +102,26 @@ public class PluginManager(string pluginRoot, PluginLogger? pluginLogger = null)
             var psi = new ProcessStartInfo("dotnet", $"script \"{plugin.ScriptPath}\"")
             {
                 UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardOutput = false,
+                RedirectStandardError = true,
+                StandardErrorEncoding = Encoding.UTF8
             };
-            
+
             var process = Process.Start(psi);
             if (process != null)
             {
                 // Read streams asynchronously to avoid deadlock
-                var outputTask = process.StandardOutput.ReadToEndAsync();
-                var errorTask = process.StandardError.ReadToEndAsync();
-                
+                var errorTask = process.StandardError.ReadToEnd();
+
                 process.WaitForExit();
-                
-                output.Append(outputTask.Result);
-                error.Append(errorTask.Result);
+
+                error.Append(errorTask);
                 success = process.ExitCode == 0;
-                
-                if (!string.IsNullOrEmpty(output.ToString()))
-                    AnsiConsole.WriteLine(output.ToString());
+
                 if (!string.IsNullOrEmpty(error.ToString()))
                     AnsiConsole.MarkupLine($"[red]{error}[/]");
             }
-            
+
             _logger?.LogExecution(plugin.Name, success, output.ToString(), error.ToString());
         }
         catch (Exception ex)
@@ -172,12 +169,12 @@ public class PluginManager(string pluginRoot, PluginLogger? pluginLogger = null)
     private bool CheckDependencies(Plugin plugin, out List<string> missingDependencies)
     {
         missingDependencies = new List<string>();
-        
+
         if (plugin.Dependencies == null || plugin.Dependencies.Count == 0)
             return true;
 
         var allPlugins = LoadPlugins().SelectMany(p => p.Value).ToList();
-        
+
         foreach (var dependency in plugin.Dependencies)
         {
             // Check if dependency is another plugin

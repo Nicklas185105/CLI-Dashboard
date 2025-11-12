@@ -1,7 +1,14 @@
 #!/usr/bin/env dotnet-script
 #r "nuget: Spectre.Console, 0.50.0"
+#r "nuget: Serilog, 4.3.0"
+#r "../../CliDashboard.Shared.dll"
 
 using Spectre.Console;
+using CliDashboard.Shared.Utils;
+
+ConsoleUtils.Clear();
+
+AnsiConsole.Write(new Rule("Hello from CLI Dashboard!").RuleStyle("green"));
 
 // Simple Hello World plugin example
 AnsiConsole.MarkupLine("[bold green]Hello from CLI Dashboard![/]");
@@ -19,6 +26,3 @@ table.AddRow("[cyan]Spectre.Console[/]", "Rich console output with colors and fo
 table.AddRow("[cyan]Easy to Create[/]", "Just add YAML + script to plugin folder");
 
 AnsiConsole.Write(table);
-AnsiConsole.WriteLine();
-AnsiConsole.MarkupLine("[dim]Press any key to continue...[/]");
-Console.ReadKey(true);

@@ -6,7 +6,16 @@ public static class ConsoleUtils
 {
     public static void Clear()
     {
-        AnsiConsole.Clear();
+        try
+        {
+            AnsiConsole.Clear();
+        }
+        catch (System.IO.IOException)
+        {
+            // Console handle not available (e.g., redirected output or non-interactive terminal)
+            // Skip clearing and just write a newline for separation
+            Console.WriteLine();
+        }
         AnsiConsole.Write(new FigletText("CLI Dashboard").Centered().Color(Color.Cyan1));
     }
 

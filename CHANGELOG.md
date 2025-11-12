@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-11-12
+
+### Fixed
+- The plugins were not executing correctly with the new setup.
+
+### Changed
+- Enhanced `ConsoleUtils.Clear` for better error handling.
+- Both example plugins updated to use the `ConsoleUtils` methods.
+	- Updated the plugin.yaml files.
+
+## [1.0.0] - 2025-11-12
+
 ### Added
 - Open source project structure
 - README.md with comprehensive documentation
@@ -16,10 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pull request template
 - MIT License
 - SECURITY.md for vulnerability reporting
-
-## [1.0.0] - 2025-11-12
-
-### Added
 - Core plugin system using `.csx` scripts with `.yaml` metadata
 - Dynamic menu generation from plugin metadata
 - Custom script management (Add, Edit, Run, Delete)
@@ -70,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version History
 
 - **[Unreleased]**: Current development version
+- **[1.0.1]**: Small fixes and changes to improve plugin functionality
 - **[1.0.0]**: Initial release with complete Phase 1-5 features
 
 ---
