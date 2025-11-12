@@ -109,9 +109,14 @@ public class PluginManager(string pluginRoot, PluginLogger? pluginLogger = null)
             var process = Process.Start(psi);
             if (process != null)
             {
-                output.Append(process.StandardOutput.ReadToEnd());
-                error.Append(process.StandardError.ReadToEnd());
+                // Read streams asynchronously to avoid deadlock
+                var outputTask = process.StandardOutput.ReadToEndAsync();
+                var errorTask = process.StandardError.ReadToEndAsync();
+                
                 process.WaitForExit();
+                
+                output.Append(outputTask.Result);
+                error.Append(errorTask.Result);
                 success = process.ExitCode == 0;
                 
                 if (!string.IsNullOrEmpty(output.ToString()))

@@ -244,9 +244,14 @@ public class TaskSchedulerService : IDisposable
             var process = Process.Start(psi);
             if (process != null)
             {
-                output = process.StandardOutput.ReadToEnd();
-                error = process.StandardError.ReadToEnd();
+                // Read streams asynchronously to avoid deadlock
+                var outputTask = process.StandardOutput.ReadToEndAsync();
+                var errorTask = process.StandardError.ReadToEndAsync();
+                
                 process.WaitForExit(300000); // 5 minute timeout
+                
+                output = outputTask.Result;
+                error = errorTask.Result;
 
                 return process.ExitCode == 0;
             }
@@ -289,9 +294,14 @@ public class TaskSchedulerService : IDisposable
             var process = Process.Start(psi);
             if (process != null)
             {
-                output = process.StandardOutput.ReadToEnd();
-                error = process.StandardError.ReadToEnd();
+                // Read streams asynchronously to avoid deadlock
+                var outputTask = process.StandardOutput.ReadToEndAsync();
+                var errorTask = process.StandardError.ReadToEndAsync();
+                
                 process.WaitForExit(300000); // 5 minute timeout
+                
+                output = outputTask.Result;
+                error = errorTask.Result;
 
                 return process.ExitCode == 0;
             }

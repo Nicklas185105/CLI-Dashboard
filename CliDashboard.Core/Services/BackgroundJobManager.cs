@@ -130,16 +130,26 @@ public class BackgroundJobManager
 
         try
         {
+            // Read streams asynchronously to avoid deadlock
+            Task<string>? outputTask = null;
+            Task<string>? errorTask = null;
+            
+            if (job.Process != null)
+            {
+                outputTask = job.Process.StandardOutput.ReadToEndAsync();
+                errorTask = job.Process.StandardError.ReadToEndAsync();
+            }
+            
             job.Process?.WaitForExit();
             
             lock (_lock)
             {
                 job.EndTime = DateTime.Now;
-                if (job.Process != null)
+                if (job.Process != null && outputTask != null && errorTask != null)
                 {
                     job.ExitCode = job.Process.ExitCode;
-                    job.Output = job.Process.StandardOutput.ReadToEnd();
-                    job.Error = job.Process.StandardError.ReadToEnd();
+                    job.Output = outputTask.Result;
+                    job.Error = errorTask.Result;
                     job.Status = job.Process.ExitCode == 0 ? JobStatus.Completed : JobStatus.Failed;
                     
                     var type = job.Status == JobStatus.Completed ? NotificationType.Success : NotificationType.Error;
