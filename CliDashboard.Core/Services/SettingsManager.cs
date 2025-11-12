@@ -1,7 +1,7 @@
 ﻿
 namespace CliDashboard.Core.Services;
 
-public class SettingsManager(string pluginFolder)
+public class SettingsManager(string pluginFolder, PluginManager pluginManager)
 {
     public void SettingsMenu()
     {
@@ -15,8 +15,9 @@ public class SettingsManager(string pluginFolder)
                     .Title("Choose a settings option:")
                     .AddChoices([
                         "Open Plugin Folder",
-                    "Create New Plugin",
-                    "Back"
+                        "Create New Plugin",
+                        "Reload Plugins",
+                        "Back"
                     ]));
 
             switch (subChoice)
@@ -27,12 +28,14 @@ public class SettingsManager(string pluginFolder)
                 case "Create New Plugin":
                     CreateNewPlugin();
                     break;
+                case "Reload Plugins":
+                    ReloadPlugins();
+                    break;
                 case "Back":
                     return;
             }
 
-            AnsiConsole.MarkupLine("\n[grey]Press any key to return to the settings menu...[/]");
-            Console.ReadKey(true);
+            ConsoleUtils.PauseForUser("Press any key to return to the settings menu...");
         }
     }
 
@@ -45,7 +48,7 @@ public class SettingsManager(string pluginFolder)
         AnsiConsole.MarkupLine("[green]Plugin folder opened.[/]");
     }
 
-    private void CreateNewPlugin()
+    public void CreateNewPlugin()
     {
         var name = AnsiConsole.Ask<string>("Plugin name:");
         var safeName = name.Replace(" ", "-").ToLowerInvariant();
@@ -90,5 +93,11 @@ public class SettingsManager(string pluginFolder)
         //Process.Start(new ProcessStartInfo("code", scriptPath) { UseShellExecute = true });
         Process.Start(new ProcessStartInfo("code", $"--new-window \"{folderPath}\"") { UseShellExecute = true });
         AnsiConsole.MarkupLine("[green]Plugin created and opened in VS Code![/]");
+    }
+
+    private void ReloadPlugins()
+    {
+        pluginManager.ReloadPlugins();
+        AnsiConsole.MarkupLine("[green]✓[/] Plugins reloaded successfully!");
     }
 }

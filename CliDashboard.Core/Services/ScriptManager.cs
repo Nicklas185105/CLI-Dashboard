@@ -1,6 +1,6 @@
 ﻿namespace CliDashboard.Core.Services;
 
-public class ScriptManager(string? scriptRoot, string? configPath)
+public class ScriptManager(string? scriptRoot, string? configPath, FavoritesManager favoritesManager)
 {
     public void CustomScriptsMenu()
     {
@@ -68,12 +68,13 @@ public class ScriptManager(string? scriptRoot, string? configPath)
                 .Title("Choose a script to run:")
                 .UseConverter(name =>
                 {
+                    if (name == "Back") return name;
                     var script = scripts.FirstOrDefault(s => s.Name == name);
-                    return script is null
-                        ? name
-                        : string.IsNullOrWhiteSpace(script.Description)
-                            ? script.Name
-                            : $"{script.Name} — [grey]{script.Description}[/]";
+                    if (script == null) return name;
+                    
+                    var star = favoritesManager.IsScriptFavorite(script.Name) ? "★ " : "";
+                    var desc = string.IsNullOrWhiteSpace(script.Description) ? "" : $" — [grey]{script.Description}[/]";
+                    return $"{star}{script.Name}{desc}";
                 })
                 .AddChoices(scriptNames));
 
@@ -81,6 +82,32 @@ public class ScriptManager(string? scriptRoot, string? configPath)
             return;
 
         var script = scripts.First(s => s.Name == selected);
+        
+        // Ask: Run or Toggle Favorite
+        var action = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title($"[grey]What do you want to do with [cyan]{script.Name}[/]?[/]")
+                .AddChoices([
+                    "Run",
+                    favoritesManager.IsScriptFavorite(script.Name) ? "Remove from Favorites" : "Add to Favorites",
+                    "Back"
+                ]));
+
+        if (action == "Back")
+            return;
+            
+        if (action.Contains("Favorite"))
+        {
+            favoritesManager.ToggleScriptFavorite(script.Name);
+            var msg = favoritesManager.IsScriptFavorite(script.Name) 
+                ? $"[green]★[/] Added [cyan]{script.Name}[/] to favorites" 
+                : $"Removed [cyan]{script.Name}[/] from favorites";
+            AnsiConsole.MarkupLine(msg);
+            ConsoleUtils.PauseForUser();
+            return;
+        }
+        
+        // Run the script
         var processStartInfo = script.Path.EndsWith(".csx")
             ? new ProcessStartInfo("dotnet", $"script \"{script.Path}\"")
             {
@@ -101,8 +128,7 @@ public class ScriptManager(string? scriptRoot, string? configPath)
         process.Start();
         process.WaitForExit();
 
-        AnsiConsole.MarkupLine("\n[grey]Press any key to return to the main menu...[/]");
-        Console.ReadKey(true);
+        ConsoleUtils.PauseForUser("Press any key to return to the main menu...");
     }
 
     public void AddCustomScript()
