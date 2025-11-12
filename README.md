@@ -1,5 +1,11 @@
 # CLI Dashboard
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![Build](https://img.shields.io/github/actions/workflow/status/Nicklas185105/CliDashboard/build.yml?branch=main)](https://github.com/Nicklas185105/CliDashboard/actions)
+[![Release](https://img.shields.io/github/v/release/Nicklas185105/CliDashboard)](https://github.com/Nicklas185105/CliDashboard/releases)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 A fully-featured, plugin-based developer productivity CLI tool with dynamic menus, script execution, scheduling, and extensibility built for power users and automation-focused engineers.
 
 ## Features
@@ -65,7 +71,7 @@ A fully-featured, plugin-based developer productivity CLI tool with dynamic menu
 
 1. Clone the repository:
    ```powershell
-   git clone https://github.com/yourusername/CliDashboard.git
+   git clone https://github.com/Nicklas185105/CliDashboard.git
    cd CliDashboard
    ```
 

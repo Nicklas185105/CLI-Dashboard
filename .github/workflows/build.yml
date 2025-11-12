@@ -1,0 +1,86 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  CONFIGURATION: Release
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build solution
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+      
+    - name: Run tests
+      run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+      continue-on-error: true
+      
+    - name: Publish application
+      run: |
+        dotnet publish .\CliDashboard.UI.CLI\CliDashboard.UI.CLI.csproj `
+          -c ${{ env.CONFIGURATION }} `
+          -r win-x64 `
+          -p:SelfContained=true `
+          -p:PublishSingleFile=true `
+          -p:EnableCompressionInSingleFile=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:PublishTrimmed=false `
+          --output .\publish
+          
+    - name: Copy Shared DLL
+      run: |
+        Copy-Item ".\CliDashboard.Shared\bin\${{ env.CONFIGURATION }}\net8.0\CliDashboard.Shared.dll" ".\publish\" -Force
+        
+    - name: Remove debug files
+      run: |
+        Get-ChildItem -Path ".\publish\" -Include *.pdb, *.xml -Recurse | Remove-Item -Force
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: cli-dashboard-win-x64
+        path: publish/
+        retention-days: 7
+        
+  lint:
+    name: Code Quality
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Check formatting
+      run: dotnet format --verify-no-changes --verbosity diagnostic
+      continue-on-error: true
+      
+    - name: Run code analysis
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} /p:TreatWarningsAsErrors=false

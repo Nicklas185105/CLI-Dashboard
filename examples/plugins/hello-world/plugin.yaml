@@ -1,0 +1,10 @@
+name: Hello World
+description: A simple example plugin that demonstrates basic plugin structure
+version: 1.0.0
+author: CLI Dashboard Team
+category: Examples
+tags:
+  - example
+  - tutorial
+  - beginner
+icon: 🌍

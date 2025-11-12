@@ -1,0 +1,10 @@
+name: System Info
+description: Displays system information including OS, CPU, memory, and disk space
+version: 1.0.0
+author: CLI Dashboard Team
+category: Examples
+tags:
+  - system
+  - monitoring
+  - info
+icon: 💻

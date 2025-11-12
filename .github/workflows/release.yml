@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  CONFIGURATION: Release
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Get version from tag
+      id: get_version
+      shell: pwsh
+      run: |
+        $version = "${{ github.ref }}" -replace 'refs/tags/v', ''
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+        echo "Version: $version"
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build solution
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+      
+    - name: Run tests
+      run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+      
+    - name: Publish application
+      run: |
+        dotnet publish .\CliDashboard.UI.CLI\CliDashboard.UI.CLI.csproj `
+          -c ${{ env.CONFIGURATION }} `
+          -r win-x64 `
+          -p:SelfContained=true `
+          -p:PublishSingleFile=true `
+          -p:EnableCompressionInSingleFile=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:PublishTrimmed=false `
+          --output .\publish
+          
+    - name: Copy Shared DLL
+      run: |
+        Copy-Item ".\CliDashboard.Shared\bin\${{ env.CONFIGURATION }}\net8.0\CliDashboard.Shared.dll" ".\publish\" -Force
+        
+    - name: Remove debug files
+      run: |
+        Get-ChildItem -Path ".\publish\" -Include *.pdb, *.xml -Recurse | Remove-Item -Force
+        
+    - name: Copy installation scripts
+      run: |
+        Copy-Item ".\install.ps1" ".\publish\" -Force
+        Copy-Item ".\README.md" ".\publish\" -Force
+        Copy-Item ".\LICENSE" ".\publish\" -Force
+        
+    - name: Create release archive
+      shell: pwsh
+      run: |
+        $archiveName = "CliDashboard-${{ steps.get_version.outputs.VERSION }}-win-x64.zip"
+        Compress-Archive -Path ".\publish\*" -DestinationPath $archiveName
+        echo "ARCHIVE_NAME=$archiveName" >> $env:GITHUB_OUTPUT
+      id: create_archive
+        
+    - name: Extract changelog for version
+      id: changelog
+      shell: pwsh
+      run: |
+        $changelogContent = Get-Content -Path "CHANGELOG.md" -Raw
+        $versionSection = $changelogContent -match "(?s)## \[${{ steps.get_version.outputs.VERSION }}\].*?(?=\n## \[|$)"
+        if ($matches) {
+          $notes = $matches[0] -replace "## \[${{ steps.get_version.outputs.VERSION }}\].*?\n", ""
+          $notes = $notes.Trim()
+          # Save to file for multiline handling
+          Set-Content -Path "release_notes.txt" -Value $notes
+        } else {
+          Set-Content -Path "release_notes.txt" -Value "Release ${{ steps.get_version.outputs.VERSION }}"
+        }
+        
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Release v${{ steps.get_version.outputs.VERSION }}
+        body_path: release_notes.txt
+        draft: false
+        prerelease: false
+        files: |
+          CliDashboard-${{ steps.get_version.outputs.VERSION }}-win-x64.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

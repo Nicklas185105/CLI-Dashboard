@@ -1,0 +1,119 @@
+name: Plugin Submission
+description: Submit a plugin to be included in the examples
+title: "[Plugin]: "
+labels: ["plugin", "contribution"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing a plugin! Please provide the information below.
+
+  - type: input
+    id: plugin-name
+    attributes:
+      label: Plugin Name
+      description: What is the name of your plugin?
+      placeholder: e.g., Git Toolkit
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Plugin Description
+      description: What does your plugin do?
+      placeholder: A detailed description of the plugin's functionality
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which category does this plugin belong to?
+      options:
+        - Development Tools
+        - Git/Version Control
+        - System Utilities
+        - Automation
+        - Productivity
+        - DevOps
+        - Monitoring
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: features
+    attributes:
+      label: Key Features
+      description: List the main features of your plugin
+      placeholder: |
+        - Feature 1
+        - Feature 2
+        - Feature 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Does your plugin require any external tools, APIs, or NuGet packages?
+      placeholder: List any dependencies here
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Plugin Version
+      description: What is the initial version?
+      placeholder: e.g., 1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: usage
+    attributes:
+      label: Usage Instructions
+      description: How should users configure and use your plugin?
+      placeholder: Provide setup and usage instructions
+    validations:
+      required: true
+
+  - type: input
+    id: pr-link
+    attributes:
+      label: Pull Request Link
+      description: Link to your PR with the plugin code (if already submitted)
+      placeholder: https://github.com/username/CliDashboard/pull/123
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other information about your plugin (screenshots, examples, etc.)
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Plugin Checklist
+      description: Please confirm your plugin meets these requirements
+      options:
+        - label: Plugin includes a complete `plugin.yaml` metadata file
+          required: true
+        - label: Plugin includes a README.md with usage instructions
+          required: true
+        - label: Plugin has been tested and works as expected
+          required: true
+        - label: Plugin follows the coding standards in CONTRIBUTING.md
+          required: true
+        - label: Plugin does not contain hardcoded paths or credentials
+          required: true
+        - label: Plugin handles errors gracefully
+          required: true
